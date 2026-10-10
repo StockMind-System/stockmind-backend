@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <ProjectReference Include="..\StockMind.Application\StockMind.Application.csproj" />
+    <ProjectReference Include="..\StockMind.Domain\StockMind.Domain.csproj" />
+    <ProjectReference Include="..\StockMind.Infrastructure\StockMind.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>
