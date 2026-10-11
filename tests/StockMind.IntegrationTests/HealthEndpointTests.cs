@@ -11,7 +11,10 @@ public sealed class HealthEndpointTests : IClassFixture<WebApplicationFactory<Pr
 
     public HealthEndpointTests(WebApplicationFactory<Program> factory) =>
         _client = factory.WithWebHostBuilder(builder =>
-            builder.ConfigureLogging(logging => logging.ClearProviders())).CreateClient();
+        {
+            builder.UseSetting("MongoDb:InitializeOnStartup", "false");
+            builder.ConfigureLogging(logging => logging.ClearProviders());
+        }).CreateClient();
 
     [Fact]
     public async Task Health_RespondeOk()

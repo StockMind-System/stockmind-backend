@@ -41,6 +41,15 @@ builder.Services
     .AddReportingInfrastructure();
 
 var app = builder.Build();
+
+if (app.Configuration.GetValue("MongoDb:InitializeOnStartup", true))
+{
+    await using var scope = app.Services.CreateAsyncScope();
+    await scope.ServiceProvider
+        .GetRequiredService<IMongoDbInitializer>()
+        .InitializeAsync();
+}
+
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseHttpsRedirection();

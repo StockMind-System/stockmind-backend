@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using StockMind.Alerts.Application;
+using StockMind.Catalog.Domain.Entities;
 using StockMind.Infrastructure.Persistence;
 
 namespace StockMind.Alerts.Infrastructure.Persistence;
@@ -10,12 +10,13 @@ internal sealed class MongoProductStockReader(IMongoDatabase database) : IProduc
 {
     public async Task<IReadOnlyCollection<ProductStock>> ListAsync(CancellationToken ct = default)
     {
-        var documents = await database.GetCollection<BsonDocument>("productos")
-            .Find(Builders<BsonDocument>.Filter.Empty).ToListAsync(ct);
-        return documents.Select(x => new ProductStock(
-            x.GetValue("Id", x.GetValue("_id", "")).ToString() ?? string.Empty,
-            x.GetValue("StockActual", 0).ToInt32(),
-            x.GetValue("StockMinimo", 0).ToInt32())).ToArray();
+        var products = await database.GetCollection<Product>("productos")
+            .Find(product => product.Activo)
+            .ToListAsync(ct);
+        return products.Select(product => new ProductStock(
+            product.Id,
+            product.StockActual,
+            product.StockMinimo)).ToArray();
     }
 }
 public static class DependencyInjection

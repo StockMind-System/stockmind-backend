@@ -60,6 +60,32 @@ puede sobrescribir con variables de entorno usando doble guion bajo, por ejemplo
 `Cors__AllowedOrigins__0`. El origen de desarrollo permitido es
 `http://localhost:4200`.
 
+## Base de datos de desarrollo
+
+Al iniciar la API con `MongoDb:InitializeOnStartup=true`, el backend crea los
+indices de MongoDB. En el entorno `Development` y en Docker tambien activa
+`SeedData:Enabled=true` para cargar un dataset sintetico reproducible solo en
+las colecciones vacias. La semilla
+predeterminada es `202610` y queda registrada en
+`metadata_sistema` junto con la version del dataset y la zona horaria del
+negocio. Incluye categorias, 12 productos, usuarios de demostracion, 120 dias
+de ventas, movimientos de inventario coherentes con esas ventas y pronosticos
+de muestra. Los productos y movimientos conservan un stock final auditable.
+
+Las cuentas de desarrollo son:
+
+| Correo | Rol |
+| --- | --- |
+| `dayana@stockmind.demo` | `ADMIN` |
+| `milton@stockmind.demo` | `USER` |
+| `oscar@stockmind.demo` | `USER` |
+| `isamar@stockmind.demo` | `ANALYST` |
+
+La contrasena inicial es `StockMind-123`. En Docker puede reemplazarse con
+`SEED_DEFAULT_PASSWORD`; en ejecucion local, con
+`SeedData__DefaultPassword`. El sembrado no elimina ni reemplaza datos
+operacionales existentes.
+
 ## Pruebas
 
 ```powershell

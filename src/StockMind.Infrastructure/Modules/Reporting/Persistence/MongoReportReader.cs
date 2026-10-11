@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using StockMind.Catalog.Domain.Entities;
 using StockMind.Infrastructure.Persistence;
 using StockMind.Reporting.Application;
 using StockMind.Reporting.Domain;
@@ -11,8 +12,8 @@ internal sealed class MongoReportReader(IMongoDatabase database) : IReportReader
 {
     public async Task<ReportSummary> GetSummaryAsync(CancellationToken ct = default)
     {
-        var productCount = await database.GetCollection<BsonDocument>("productos")
-            .CountDocumentsAsync(Builders<BsonDocument>.Filter.Empty, cancellationToken: ct);
+        var productCount = await database.GetCollection<Product>("productos")
+            .CountDocumentsAsync(product => product.Activo, cancellationToken: ct);
         var sales = await database.GetCollection<BsonDocument>("ventas")
             .Find(Builders<BsonDocument>.Filter.Empty).ToListAsync(ct);
         return new ReportSummary(productCount, sales.Count, sales.Sum(ReadTotal));
