@@ -18,8 +18,12 @@ public sealed class InventoryMovement
             throw new ArgumentException("El producto es obligatorio.", nameof(productoId));
         if (!Enum.IsDefined(tipo))
             throw new ArgumentOutOfRangeException(nameof(tipo), "El tipo de movimiento no es valido.");
-        if (cantidad <= 0)
-            throw new ArgumentOutOfRangeException(nameof(cantidad), "La cantidad debe ser mayor que cero.");
+        if (tipo == MovementType.Ajuste ? cantidad < 0 : cantidad <= 0)
+            throw new ArgumentOutOfRangeException(
+                nameof(cantidad),
+                tipo == MovementType.Ajuste
+                    ? "El nuevo saldo no puede ser negativo."
+                    : "La cantidad debe ser mayor que cero.");
 
         return new InventoryMovement
         {

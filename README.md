@@ -32,10 +32,19 @@ La direccion de dependencias es `API -> Application <- Infrastructure`, con
 `Application -> Domain`. El dominio no depende de ASP.NET Core, MongoDB ni del
 servicio de analitica.
 
+La API utiliza el MongoDB instalado en Windows. Al ejecutar la API directamente
+se conecta a `mongodb://localhost:27017`; desde Docker utiliza la direccion
+equivalente `mongodb://host.docker.internal:27017`. MongoDB Compass debe
+conectarse con `mongodb://127.0.0.1:27017/stockmind?directConnection=true`.
+
 ## Contratos y responsabilidades
 
 - Angular consume exclusivamente los endpoints `/api/*` de este backend.
 - C# controla autenticacion, catalogo, inventario, ventas, alertas y reportes.
+- Las entradas y salidas modifican el stock; un movimiento de tipo `Ajuste`
+  interpreta la cantidad como el nuevo saldo absoluto. Las ventas descuentan
+  stock con una actualizacion condicionada y usan el precio vigente del
+  producto en el backend.
 - El modulo `Forecasting` traduce el contrato HTTP publico en camelCase al
   contrato snake_case del servicio Python; los detalles de transporte no se
   filtran hacia el frontend.
@@ -97,6 +106,9 @@ dotnet test
 ```powershell
 docker compose up --build
 ```
+
+Este comando levanta solamente la API. MongoDB debe estar instalado y activo
+en Windows en el puerto `27017`.
 
 Antes de desplegar, reemplaza la clave JWT de desarrollo. El inicio de sesion
 consulta la coleccion `usuarios`; las cuentas deben almacenarse con una

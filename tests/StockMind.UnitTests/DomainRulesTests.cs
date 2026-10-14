@@ -22,6 +22,13 @@ public sealed class DomainRulesTests
     {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             InventoryMovement.Create("product-1", MovementType.Entrada, 0, null));
+
+        var adjustment = InventoryMovement.Create(
+            "product-1", MovementType.Ajuste, 0, "Conteo sin existencias");
+
+        Assert.Equal(0, adjustment.Cantidad);
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            InventoryMovement.Create("product-1", MovementType.Ajuste, -1, null));
     }
 
     [Fact]
